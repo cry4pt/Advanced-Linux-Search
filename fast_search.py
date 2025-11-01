@@ -1153,7 +1153,11 @@ def post_action_menu(paths: List[str], config: dict):
                 print("   ⏭ Skipped remaining files")
                 return
 
-            if choice in ("o", ""):
+            if choice == "":
+                # Enter = move to next file
+                break
+
+            if choice == "o":
                 try:
                     if app:
                         subprocess.Popen([app, path])
@@ -1162,7 +1166,7 @@ def post_action_menu(paths: List[str], config: dict):
                     else:
                         subprocess.run(["open" if IS_MACOS else "xdg-open", path])
                     print("   ✓ Opened")
-                    break  # Move to next file
+                    # Stay in loop for more actions
                 except Exception as e:
                     print(f"   ✗ Open failed: {e}")
 
@@ -1174,7 +1178,7 @@ def post_action_menu(paths: List[str], config: dict):
                     else:
                         subprocess.run(["open" if IS_MACOS else "xdg-open", folder])
                     print("   ✓ Folder opened")
-                    break
+                    # Stay in loop for more actions
                 except Exception as e:
                     print(f"   ✗ Failed: {e}")
 
@@ -1184,11 +1188,10 @@ def post_action_menu(paths: List[str], config: dict):
 
                     pyperclip.copy(path)
                     print("   ✓ Path copied to clipboard!")
-                    break
+                    # Stay in loop for more actions
                 except ImportError:
                     print(f"   Path: {path}")
                     print("   (Install pyperclip for clipboard support)")
-                    break
 
             elif choice == "p":
                 preview_file(path)
@@ -1200,7 +1203,7 @@ def post_action_menu(paths: List[str], config: dict):
                     try:
                         Path(path).unlink()
                         print("   ✓ Deleted")
-                        break
+                        break  # Move to next file after deletion
                     except Exception as e:
                         print(f"   ✗ Delete failed: {e}")
                 else:
